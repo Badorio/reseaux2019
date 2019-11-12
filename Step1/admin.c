@@ -234,7 +234,9 @@ int main()
              }
    case '2': ListingVoituresNMBB("VoituresNMBB") ;
              break ;
-   case '3': 	
+   case '3': printf("Entrez un numero de reference : ");
+  	     scanf("%d", &Numero);
+  	     RechercheVoitureNMBB("VoituresNMBB", Numero, &UnRecord);
              break ;
    case '5': ListingFacturesNMBB("FactureNMBB") ;
 	     break ;

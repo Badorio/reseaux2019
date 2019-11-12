@@ -4,7 +4,5 @@
 #include <time.h>
 #include "data.h"
 
-void AProposServeurNMBB(char *Version,char *Nom1,char* Nom2) ;
-int RechercheVoitureHV(char* NomFichier,int Reference ,struct
-VoitureNMBB *UnRecord) ;
-
+void AProposServeurNMBB(char *Version,char *Nom1,char* Nom2);
+int RechercheVoitureNMBB(char* NomFichier, int Reference ,struct VoitureNMBB *UnRecord) ;

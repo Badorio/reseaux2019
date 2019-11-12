@@ -1,4 +1,4 @@
-
+.SILENT:
 # cphex\makefile
 
 LIBS=
