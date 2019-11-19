@@ -52,9 +52,12 @@ int main()
              }
    case '2': ListingVoituresNMBB("VoituresNMBB") ;
              break ;
-   case '3': printf("Entrez un numero de reference : ");
+   case '3': printf("Entrez un numero de référence : ");
+   	     fflush(stdin);
   	     scanf("%d", &Numero);
-  	     RechercheVoitureNMBB("VoituresNMBB", Numero, &UnRecord);
+  	     int retour = RechercheVoitureNMBB("VoituresNMBB", Numero, &UnRecord);
+  	     if (retour != 1)
+  	     	printf("Aucun résultat !\n");
              break ;
    case '5': ListingFacturesNMBB("FactureNMBB") ;
 	     break ;

@@ -10,6 +10,7 @@
 #include <string.h>
 #include "../udplib/udplib.h"
 #include "structure.h"
+#include "LibSerNMBB.h"
 
 
 void die(char *s)
@@ -30,7 +31,8 @@ int main(int argc,char *argv[])
  u_short PortSocket ;
  
  int tm ;
- struct Requete UneRequete ;
+ struct Requete UneRequete;
+ struct VoitureNMBB UnRecord;
 
  memset(&sthis,0,sizeof(struct sockaddr_in)) ;
  memset(&sos,0,sizeof(struct sockaddr_in)) ; 
@@ -65,7 +67,22 @@ int main(int argc,char *argv[])
  /* attention l'enum peut être codé en short */
  /* reponse avec psos */
  
- UneRequete.Type = Reponse ; 
+ int verif;
+ verif = RechercheVoitureNMBB("VoituresNMBB", UneRequete.Reference, &UnRecord) ;
+ 
+ if (verif == 1)
+ {
+ 	UneRequete.Reference = UnRecord.Reference;
+ 	strcpy(UneRequete.Marque, UnRecord.Marque);
+ 	strcpy(UneRequete.Modele, UnRecord.Modele);
+ 	UneRequete.Nombre = UnRecord.Nombre;
+ 	strcpy(UneRequete.Couleur, UnRecord.Couleur);
+ 	UneRequete.Type = OK;
+ }
+ else
+ {
+ 	UneRequete.Type = Fail;
+ }
  strcat(UneRequete.Message," Client") ;
  rc = SendDatagram(Desc,&UneRequete,sizeof(struct Requete) ,&sor ) ;
  if ( rc == -1 )

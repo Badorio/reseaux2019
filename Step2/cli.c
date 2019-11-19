@@ -9,6 +9,7 @@
 #include <string.h>
 #include "../udplib/udplib.h"
 #include "structure.h"
+#include "LibSerNMBB.h"
 
 void die(char *s)
 {
@@ -21,6 +22,7 @@ int main(int argc, char *argv[])
  int rc ;
  int Desc ;
  int tm ; 
+ struct VoitureNMBB UnRecord;
  
  u_long  IpSocket , IpServer;
  u_short PortSocket, PortServer ; 
@@ -59,8 +61,12 @@ int main(int argc, char *argv[])
   sos.sin_family = AF_INET ;
   sos.sin_addr.s_addr= IpServer ;
   sos.sin_port = htons(PortServer) ;
-
- 
+  
+  int ref;
+  printf("Entrez la reference du vehicule : ");
+  scanf("%d", &ref);
+  
+ UneRequete.Reference = ref;
  UneRequete.Type = Question ; 
  strncpy(UneRequete.Message , "Avec une structure: Bonjour" , sizeof(UneRequete.Message)) ;
  
@@ -79,6 +85,23 @@ int main(int argc, char *argv[])
     die("ReceiveDatagram") ;
  else
    fprintf(stderr,"bytes recus:%d:%s\n",rc,UneRequete.Message ) ;
+   
+   if (UneRequete.Type == OK)
+   {
+   	UnRecord.Reference  = UneRequete.Reference;
+ 	strcpy(UnRecord.Marque, UneRequete.Marque);
+ 	strcpy(UnRecord.Modele, UneRequete.Modele);
+ 	UnRecord.Nombre = UneRequete.Nombre;
+ 	strcpy(UnRecord.Couleur, UneRequete.Couleur);
+   	printf("Voici votre résultat : \n");
+   	AfficheEnteteVoitureNMBB();
+   	AfficheVoitureNMBB(&UnRecord);
+   	
+   }
+   else
+   {
+   	printf("Aucun résultat trouvé !\n");
+   }
  
  close(Desc) ;
 }
