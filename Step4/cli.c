@@ -23,6 +23,8 @@ int main(int argc, char *argv[])
  int Desc ;
  int tm ; 
  char Choix;
+ char Client[60], Tampon[80];
+ int Numero, Nombre;
  struct VoitureNMBB UnRecord;
  
  u_long  IpSocket , IpServer;
@@ -67,7 +69,7 @@ int main(int argc, char *argv[])
   while(1)
   {
      printf("1) Demander une référence\n");
-     printf("2) \n");
+     printf("2) Acheter une voiture\n");
      printf("3) Quitter\n");
      Choix = ReadChar();
    switch(Choix)
@@ -115,9 +117,48 @@ int main(int argc, char *argv[])
 
          
          break;
-      // case '2':
+      case '2':
+      		printf("Nom de client : ");
+   		fgets (Tampon, sizeof Tampon, stdin);
+   		strcpy (Client, Tampon);
+   		
+   		printf("Entrez la reference de la voiture : ");
+	   	fgets (Tampon, sizeof Tampon, stdin);
+	        Numero = atoi(Tampon);
+ 	     
+ 	        printf("Entrez le nombre de voiture : ");
+ 	        fgets (Tampon, sizeof Tampon, stdin);
+ 	        Nombre = atoi(Tampon);
+ 	        
+ 	         UneRequete.Reference = Numero;
+ 	         strcpy(UneRequete.NomClient, Client);
+ 	         UneRequete.Nombre = Nombre;
+		 UneRequete.Type = Achat; 
+		 strncpy(UneRequete.Message , "On achète une voiture !" , sizeof(UneRequete.Message)) ;
+		 
+		 rc = SendDatagram(Desc,&UneRequete,sizeof(struct Requete) ,&sos ) ;
 
-      //    break;
+		 if ( rc == -1 )
+		    die("SendDatagram") ;
+		 else
+		    fprintf(stderr,"Envoi de %d bytes\n",rc ) ;
+		 
+		 memset(&UneRequete,0,sizeof(struct Requete)) ;
+		 tm = sizeof(struct Requete) ;
+		 
+		 rc = ReceiveDatagram( Desc, &UneRequete,tm, &sor ) ;
+		 if ( rc == -1 )
+		    die("ReceiveDatagram") ;
+		 else
+		    fprintf(stderr,"bytes recus:%d:%s\n",rc,UneRequete.Message ) ;
+		    
+		 if (UneRequete.Type == OK)
+		 	printf ("Reservation et Facturation OK\n");   
+	 	 else
+	 	 	printf("Erreur !\n");
+ 	        
+	    
+          break;
       case '3':
             close(Desc) ;
             exit(0);
