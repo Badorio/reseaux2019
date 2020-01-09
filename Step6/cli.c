@@ -86,8 +86,7 @@ int main(int argc, char *argv[])
       printf("2) Acheter une voiture\n");
       printf("3) Quitter\n");
 
-
-compteur++;
+      compteur++;
 
       Choix = ReadChar();
       switch (Choix)
@@ -100,7 +99,7 @@ compteur++;
          UneRequete.Type = Question;
          strncpy(UneRequete.Message, "Avec une structure: Bonjour", sizeof(UneRequete.Message));
 
-	UneRequete.Numero = compteur; //ajouter le numéro de la requete à la recherche
+         UneRequete.Numero = compteur; //ajouter le numéro de la requete à la recherche
 
          rc = SendDatagram(Desc, &UneRequete, sizeof(struct Requete), &sos);
 
@@ -109,7 +108,6 @@ compteur++;
          else
             fprintf(stderr, "Envoi de %d bytes\n", rc);
 
-	
          memset(&UneRequete, 0, sizeof(struct Requete));
          tm = sizeof(struct Requete);
 
@@ -119,31 +117,30 @@ compteur++;
          else
             fprintf(stderr, "bytes recus:%d:%s\n", rc, UneRequete.Message);
 
-	while (UneRequete.Numero != compteur) //vérifie si il y a des doublons
-	{
-		//On a un doublon
-		printf("DOUBLON\n");	
-		rc = ReceiveDatagram(Desc, &UneRequete, tm, &sor); //On va éliminer les doublons
-		if (rc == -1)
-		    die("ReceiveDatagram");
-	}
+         while (UneRequete.Numero != compteur) //vérifie si il y a des doublons
+         {
+            //On a un doublon
+            printf("DOUBLON\n");
+            rc = ReceiveDatagram(Desc, &UneRequete, tm, &sor); //On va éliminer les doublons
+            if (rc == -1)
+               die("ReceiveDatagram");
+         }
 
-	if (UneRequete.Type == OK)
-	 {
-	    UnRecord.Reference = UneRequete.Reference;
-	    strcpy(UnRecord.Marque, UneRequete.Marque);
-	    strcpy(UnRecord.Modele, UneRequete.Modele);
-	    UnRecord.Nombre = UneRequete.Nombre;
-	    strcpy(UnRecord.Couleur, UneRequete.Couleur);
-	    printf("Voici votre résultat : \n");
-	    AfficheEnteteVoitureNMBB();
-	    AfficheVoitureNMBB(&UnRecord);
-	 }
-	 else
-	 {
-	    printf("Aucun résultat trouvé !\n");
-	 }
- 
+         if (UneRequete.Type == OK)
+         {
+            UnRecord.Reference = UneRequete.Reference;
+            strcpy(UnRecord.Marque, UneRequete.Marque);
+            strcpy(UnRecord.Modele, UneRequete.Modele);
+            UnRecord.Nombre = UneRequete.Nombre;
+            strcpy(UnRecord.Couleur, UneRequete.Couleur);
+            printf("Voici votre résultat : \n");
+            AfficheEnteteVoitureNMBB();
+            AfficheVoitureNMBB(&UnRecord);
+         }
+         else
+         {
+            printf("Aucun résultat trouvé !\n");
+         }
 
          break;
       case '2':
@@ -158,10 +155,10 @@ compteur++;
          printf("Entrez le nombre de voiture : ");
          fgets(Tampon, sizeof Tampon, stdin);
          Nombre = atoi(Tampon);
-         
+
          printf("Entrez la date d'achat (sous le format mmjjhh) : ");
-	 fflush (stdin);
-	 scanf("%d", &UneRequete.Date);
+         fflush(stdin);
+         scanf("%d", &UneRequete.Date);
 
          UneRequete.Reference = Numero;
          strcpy(UneRequete.NomClient, Client);
@@ -169,13 +166,11 @@ compteur++;
          UneRequete.Type = Achat;
          strncpy(UneRequete.Message, "On achète une voiture !", sizeof(UneRequete.Message));
 
-
          compteur++;
       demarrage:
          time = 5;
          retour = alarm(time);
          UneRequete.Numero = compteur;
-
 
          rc = SendDatagram(Desc, &UneRequete, sizeof(struct Requete), &sos);
 
@@ -192,7 +187,6 @@ compteur++;
                tm = sizeof(struct Requete);
                rc = ReceiveDatagram(Desc, &UneRequete, tm, &sor);
 
-
                if (rc == -1)
                {
                   //die("ReceiveDatagram");
@@ -202,29 +196,26 @@ compteur++;
                {
                   fprintf(stderr, "bytes recus:%d:%s\n", rc, UneRequete.Message);
                   retour = alarm(0);
-		
 
-			while (UneRequete.Numero != compteur) //vérifie si il y a des doublons
-			{
-				//On a un doublon
-				printf("DOUBLON\n");	
-				rc = ReceiveDatagram(Desc, &UneRequete, tm, &sor); //On va éliminer les doublons
-				if (rc == -1)
-				    die("ReceiveDatagram");
-			}
+                  while (UneRequete.Numero != compteur) //vérifie si il y a des doublons
+                  {
+                     //On a un doublon
+                     printf("DOUBLON\n");
+                     rc = ReceiveDatagram(Desc, &UneRequete, tm, &sor); //On va éliminer les doublons
+                     if (rc == -1)
+                        die("ReceiveDatagram");
+                  }
 
-
-                  
-			if (UneRequete.Type == OK)
-			{
-			printf("Reservation et Facturation OK\n");
-			break;
-			}
-			else
-			{
-			printf("Erreur !\n");
-			break;
-			}
+                  if (UneRequete.Type == OK)
+                  {
+                     printf("Reservation et Facturation OK\n");
+                     break;
+                  }
+                  else
+                  {
+                     printf("Erreur !\n");
+                     break;
+                  }
                }
             }
          }
