@@ -59,6 +59,10 @@ int main(int argc,char *argv[])
  
  tm = sizeof(struct Requete) ;
  while(1){
+
+	fflush(stdin);
+	getchar();
+	
  rc = ReceiveDatagram( Desc,&UneRequete ,tm, &sor ) ;
  if ( rc == -1 )
     die("ReceiveDatagram") ;
@@ -115,10 +119,10 @@ int main(int argc,char *argv[])
  		
  }
  
- printf("Bloquage de serveur\n\n");
- fflush (stdin);
- printf("Entrez un caractere pour deverouiller le serveur : "); 
- getchar();
+ //printf("Bloquage de serveur\n\n");
+ //fflush (stdin);
+ //printf("Entrez un caractere pour deverouiller le serveur : "); 
+ //getchar();
  
  strcat(UneRequete.Message," Client") ;
  rc = SendDatagram(Desc,&UneRequete,sizeof(struct Requete) ,&sor ) ;
